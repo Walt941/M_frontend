@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --main-primary: #8B5CF6;
+    --main-secondary: #f1f1f1;
+    --main-third:#9f7af5 ;
+
+    --bg-input: #f7f7f7;
+    --border-primary: #4b5563;
+  
+    --text-primary: #130403;
+    --text-secondary: #f2f1fd;
+    
+  }
