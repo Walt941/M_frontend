@@ -7,6 +7,8 @@ import toast from 'react-hot-toast';
 import { AxiosError } from 'axios';
 import RestApiClient from '../../services/api';
 import InputThemed from '../../components/inputs/InputThemed';
+import { usePublicGuard } from "../../Hooks/usePublicGuard";
+
 
 interface FormValues {
     code: string[];
@@ -16,6 +18,7 @@ interface FormValues {
 }
 
 const RecoverAccount: React.FC = () => {
+    usePublicGuard();
     const [showPassword, setShowPassword] = useState(false);
     const [searchParams] = useSearchParams();
     const email = searchParams.get('email');

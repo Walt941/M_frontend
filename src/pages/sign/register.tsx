@@ -6,19 +6,22 @@ import toast from 'react-hot-toast';
 import { AxiosError } from 'axios';
 import RestApiClient from '../../services/api';
 import InputThemed from '../../components/inputs/InputThemed';
+import { usePublicGuard } from "../../Hooks/usePublicGuard";
+
 
 interface FormValues {
-    name: string;
+    username: string;
     email: string;
     password: string;
     [key: string]: string;
 }
 
 const Register = () => {
+    usePublicGuard();
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const validationSchema = Yup.object({
-        name: Yup.string()
+        username: Yup.string()
             .min(4, 'El nombre debe tener al menos 4 caracteres')
             .max(20, 'El nombre no puede tener más de 20 caracteres')
             .required('El nombre es obligatorio'),
@@ -35,23 +38,23 @@ const Register = () => {
     const formik = useFormik<FormValues>({
         initialValues: {
             email: '',
-            name: '',
+            username: '',
             password: ''
 
         },
         validationSchema,
-        onSubmit: async (values) => {
+        onSubmit: async (user) => {
             const errors = await formik.validateForm();
             if (Object.keys(errors).length > 0) {
                 formik.setTouched({
-                    name: true,
+                    username: true,
                     email: true,
                     password: true,
                 });
                 return;
             }
             try {
-                const res = await RestApiClient.post('/register', values);
+                const res = await RestApiClient.post('/register', user);
                 toast.success(res.data.message);
 
                 setTimeout(() => {
@@ -78,14 +81,14 @@ const Register = () => {
                             <InputThemed
                                 label="Nombre"
                                 type="text"
-                                field="name"
+                                field="username"
                                 data={formik.values}
                                 setData={formik.setFieldValue}
                                 placeholder="Tu nombre"
-                                onBlur={() => formik.setFieldTouched('name', true)}
+                                onBlur={() => formik.setFieldTouched('username', true)}
                             />
-                            {formik.touched.name && formik.errors.name ? (
-                                <div className="text-red-500 text-sm mt-1">{formik.errors.name}</div>
+                            {formik.touched.username && formik.errors.username ? (
+                                <div className="text-red-500 text-sm mt-1">{formik.errors.username}</div>
                             ) : null}
 
 

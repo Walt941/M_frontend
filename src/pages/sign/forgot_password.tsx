@@ -5,6 +5,8 @@ import toast from 'react-hot-toast';
 import { AxiosError } from 'axios';
 import RestApiClient from '../../services/api';
 import InputThemed from '../../components/inputs/InputThemed';
+import { usePublicGuard } from "../../Hooks/usePublicGuard";
+
 
 interface FormValues {
     email: string;
@@ -13,6 +15,7 @@ interface FormValues {
 
 const ForgotPassword = () => {
     const navigate = useNavigate();
+    usePublicGuard();
 
     const validationSchema = Yup.object({
         email: Yup.string()

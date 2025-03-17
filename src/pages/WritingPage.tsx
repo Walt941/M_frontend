@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router"; 
-
+import { useAuthGuard } from "../Hooks/useAuthGuard";
 
 const wordList = [
   "the", "be", "to", "of", "and", "a", "in", "that", "have", "I",
@@ -21,6 +21,7 @@ interface TypingStats {
 }
 
 export default function WritingPage() {
+  useAuthGuard();
   const navigate = useNavigate(); 
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [wordsToType, setWordsToType] = useState<string[]>([]);

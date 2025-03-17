@@ -7,7 +7,7 @@ import { AxiosError } from 'axios';
 import RestApiClient from '../../services/api';
 import { useAuthStore } from '../../stores/AuthStore';
 import InputThemed from '../../components/inputs/InputThemed';
-
+import { usePublicGuard } from "../../Hooks/usePublicGuard";
 
 interface FormValues {
     email: string;
@@ -16,6 +16,7 @@ interface FormValues {
 }
 
 const Login = () => {
+    usePublicGuard();
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     const login = useAuthStore((state) => state.login);
