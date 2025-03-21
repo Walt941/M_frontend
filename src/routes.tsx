@@ -10,7 +10,7 @@ import WritingPage from './pages/WritingPage';
 function Router() {
     return (
         <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<Home />} />
             <Route path="/login/" element={<Outlet />}
             >
                 <Route index element={<Login />} />

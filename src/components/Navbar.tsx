@@ -65,6 +65,14 @@ function Navbar() {
                                         <IoIosLogIn size={24} color="currentColor" />
                                         <span>Login</span>
                                     </Link>
+                                    <Link
+                                        to="/home"
+                                        className={`flex items-center space-x-2 py-2 text-gray-700 hover:text-gray-900 px-1`}
+                                        onClick={() => setShowMenu(false)}
+                                    >
+                                        
+                                        <span>Home</span>
+                                    </Link>
                                 </>
                             ) : (
                                 <button
