@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FaUserPlus, FaAlignRight, FaSignOutAlt } from "react-icons/fa";
-import { IoIosLogIn } from "react-icons/io";
+import { IoIosLogIn, IoMdHome } from "react-icons/io";
 import { useAuthStore } from '../stores/AuthStore';
 import { Link, useNavigate } from 'react-router';
 
@@ -24,7 +24,7 @@ function Navbar() {
         <nav className="flex items-center justify-between p-4 bg-main-primary text-white">
             <div className="flex items-center">
                 <Link to="/" className="text-2xl text-text-secondary font-bold">
-                    Logo
+                    MT
                 </Link>
             </div>
 
@@ -70,7 +70,7 @@ function Navbar() {
                                         className={`flex items-center space-x-2 py-2 text-gray-700 hover:text-gray-900 px-1`}
                                         onClick={() => setShowMenu(false)}
                                     >
-                                        
+                                         <IoMdHome size={24} color="currentColor" />
                                         <span>Home</span>
                                     </Link>
                                 </>

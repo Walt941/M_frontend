@@ -16,10 +16,25 @@ export default {
         // misc
         'bg-input': 'var(--bg-input)',
         'border-primary': 'var(--border-primary)'
-
-      }
+      },
+      
+      animation: {
+        'right-to-left': 'right-to-left 1.5s ease forwards', 
+        'left-to-right': 'left-to-right 1.5s ease forwards', 
+      },
+      keyframes: {
+       
+        'right-to-left': {
+          '0%': { transform: 'translateX(100px)', opacity: '0' }, 
+          '100%': { transform: 'translateX(0)', opacity: '1' }, 
+        },
+        
+        'left-to-right': {
+          '0%': { transform: 'translateX(-100px)', opacity: '0' }, 
+          '100%': { transform: 'translateX(0)', opacity: '1' }, 
+        },
+      },
     },
   },
   plugins: [],
-}
-
+};

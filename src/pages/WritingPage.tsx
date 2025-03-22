@@ -13,13 +13,18 @@ interface TypingStats {
   endTime: number | null;
 }
 
+interface Word {
+  id: string; 
+  word: string; 
+}
+
 export default function WritingPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const sessionId = location.state?.sessionId; 
 
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [wordsToType, setWordsToType] = useState<string[]>([]);
+  const [wordsToType, setWordsToType] = useState<Word[]>([]); 
   const [userInput, setUserInput] = useState("");
   const [currentLetterIndex, setCurrentLetterIndex] = useState(0);
   const [letterStatus, setLetterStatus] = useState<Record<number, boolean>>({});
@@ -35,15 +40,16 @@ export default function WritingPage() {
     endTime: null,
   });
 
+  const [startTime, setStartTime] = useState<number | null>(null); 
   const inputRef = useRef<HTMLInputElement>(null);
 
- 
+  
   const fetchSessionWords = async () => {
     try {
       const response = await RestApiClient.get(`/sessions/${sessionId}/words`);
 
       if (response.status === 200 && Array.isArray(response.data.words)) {
-        setWordsToType(response.data.words);
+        setWordsToType(response.data.words); 
         setIsSessionActive(true);
         setStats((prev) => ({
           ...prev,
@@ -51,7 +57,7 @@ export default function WritingPage() {
           startTime: Date.now(),
         }));
 
-       
+        
         setTimeout(() => {
           if (inputRef.current) {
             inputRef.current.focus();
@@ -66,6 +72,7 @@ export default function WritingPage() {
     }
   };
 
+  
   useEffect(() => {
     if (sessionId) {
       fetchSessionWords();
@@ -75,11 +82,31 @@ export default function WritingPage() {
     }
   }, [sessionId]);
 
+  
+  const sendLetterToBackend = async (letter: string, isError: boolean, position: number, timeTaken: number) => {
+    try {
+      const currentWord = wordsToType[currentWordIndex]; 
+      const response = await RestApiClient.post('/letters', {
+        letter,
+        wordId: currentWord.id,
+        isError,
+        time: timeTaken, 
+        position, 
+      });
+
+      if (response.status !== 201) {
+        console.error("Error al enviar la letra al backend:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error al enviar la letra:", error);
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!isSessionActive || isSessionComplete) return;
 
     const value = e.target.value;
-    const currentWord = wordsToType[currentWordIndex];
+    const currentWord = wordsToType[currentWordIndex].word; 
 
     if (value.length === currentWord.length) {
       const isWordCorrect = value === currentWord;
@@ -113,6 +140,16 @@ export default function WritingPage() {
         } else {
           incorrectCount++;
         }
+
+        
+        const endTime = Date.now();
+        const timeTaken = startTime ? endTime - startTime : 0; 
+
+        
+        sendLetterToBackend(value[i], !isCorrect, i, timeTaken);
+
+        
+        setStartTime(Date.now());
       }
 
       setLetterStatus(newLetterStatus);
@@ -150,7 +187,7 @@ export default function WritingPage() {
   const renderWord = () => {
     if (!wordsToType.length) return null;
 
-    const currentWord = wordsToType[currentWordIndex];
+    const currentWord = wordsToType[currentWordIndex].word; 
 
     return (
       <div className="text-3xl font-mono tracking-wide my-6">
@@ -172,6 +209,7 @@ export default function WritingPage() {
   useEffect(() => {
     if (isSessionActive && inputRef.current) {
       inputRef.current.focus();
+      setStartTime(Date.now()); 
     }
   }, [isSessionActive]);
 
@@ -211,7 +249,7 @@ export default function WritingPage() {
             </div>
           ) : (
             <div className="flex flex-col items-center">
-              {/* Contenedor de palabras */}
+             
               <div className="flex gap-4 mb-4 overflow-x-hidden w-full flex-wrap justify-center">
                 {wordsToType.map((word, index) => (
                   <span
@@ -222,7 +260,7 @@ export default function WritingPage() {
                         : "bg-gray-200 text-gray-700"
                     }`}
                   >
-                    {word}
+                    {word.word} 
                   </span>
                 ))}
               </div>
