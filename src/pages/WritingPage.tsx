@@ -18,6 +18,13 @@ interface Word {
   word: string; 
 }
 
+interface LetterData {
+  letter: string;
+  isError: boolean;
+  position: number;
+  timeTaken: number;
+}
+
 export default function WritingPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -41,9 +48,10 @@ export default function WritingPage() {
   });
 
   const [startTime, setStartTime] = useState<number | null>(null); 
+  const [lettersBuffer, setLettersBuffer] = useState<LetterData[]>([]); 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  
+
   const fetchSessionWords = async () => {
     try {
       const response = await RestApiClient.get(`/sessions/${sessionId}/words`);
@@ -83,39 +91,58 @@ export default function WritingPage() {
   }, [sessionId]);
 
   
-  const sendLetterToBackend = async (letter: string, isError: boolean, position: number, timeTaken: number) => {
+  const sendLettersToBackend = async (letters: LetterData[], wordId: string) => {
     try {
-      const currentWord = wordsToType[currentWordIndex]; 
-      const response = await RestApiClient.post('/letters', {
-        letter,
-        wordId: currentWord.id,
-        isError,
-        time: timeTaken, 
-        position, 
+      const response = await RestApiClient.post('/letters/batch', {
+        wordId,
+        letters,
       });
 
       if (response.status !== 201) {
-        console.error("Error al enviar la letra al backend:", response.data.message);
+        console.error("Error al enviar las letras al backend:", response.data.message);
       }
     } catch (error) {
-      console.error("Error al enviar la letra:", error);
+      console.error("Error al enviar las letras:", error);
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!isSessionActive || isSessionComplete) return;
-
+  
     const value = e.target.value;
-    const currentWord = wordsToType[currentWordIndex].word; 
-
+    const currentWord = wordsToType[currentWordIndex].word;
+  
     if (value.length === currentWord.length) {
       const isWordCorrect = value === currentWord;
-
+  
+      
+      const lastLetter = value[value.length - 1];
+      const isLastLetterCorrect = lastLetter === currentWord[currentWord.length - 1];
+      const endTime = Date.now();
+      const timeTaken = startTime ? endTime - startTime : 0;
+  
+      
+      const updatedLettersBuffer = [
+        ...lettersBuffer,
+        {
+          letter: lastLetter,
+          isError: !isLastLetterCorrect,
+          position: value.length - 1,
+          timeTaken,
+        },
+      ];
+  
+      
+      sendLettersToBackend(updatedLettersBuffer, wordsToType[currentWordIndex].id);
+      setLettersBuffer([]); 
+  
+     
       setStats((prev) => ({
         ...prev,
         correctWords: prev.correctWords + (isWordCorrect ? 1 : 0),
       }));
-
+  
+      
       if (currentWordIndex < wordsToType.length - 1) {
         setCurrentWordIndex((prev) => prev + 1);
         setCurrentLetterIndex(0);
@@ -126,35 +153,43 @@ export default function WritingPage() {
       }
     } else {
       setUserInput(value);
-
+  
       const newLetterStatus: Record<number, boolean> = {};
       let correctCount = 0;
       let incorrectCount = 0;
-
+  
       for (let i = 0; i < value.length; i++) {
         const isCorrect = i < currentWord.length && value[i] === currentWord[i];
         newLetterStatus[i] = isCorrect;
-
+  
         if (isCorrect) {
           correctCount++;
         } else {
           incorrectCount++;
         }
-
+  
         
         const endTime = Date.now();
-        const timeTaken = startTime ? endTime - startTime : 0; 
-
+        const timeTaken = startTime ? endTime - startTime : 0;
+  
         
-        sendLetterToBackend(value[i], !isCorrect, i, timeTaken);
-
-        
+        setLettersBuffer((prev) => [
+          ...prev,
+          {
+            letter: value[i],
+            isError: !isCorrect,
+            position: i,
+            timeTaken,
+          },
+        ]);
+  
+       
         setStartTime(Date.now());
       }
-
+  
       setLetterStatus(newLetterStatus);
       setCurrentLetterIndex(value.length);
-
+  
       setStats((prev) => ({
         ...prev,
         correctChars: prev.correctChars + correctCount,
@@ -171,6 +206,12 @@ export default function WritingPage() {
       ...prev,
       endTime: Date.now(),
     }));
+
+    
+    if (lettersBuffer.length > 0) {
+      sendLettersToBackend(lettersBuffer, wordsToType[currentWordIndex].id);
+      setLettersBuffer([]); 
+    }
   };
 
   const calculateWPM = () => {
@@ -249,7 +290,6 @@ export default function WritingPage() {
             </div>
           ) : (
             <div className="flex flex-col items-center">
-             
               <div className="flex gap-4 mb-4 overflow-x-hidden w-full flex-wrap justify-center">
                 {wordsToType.map((word, index) => (
                   <span
