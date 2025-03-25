@@ -1,14 +1,11 @@
-import React from 'react';
-import  { useState} from 'react'
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { useNavigate, useSearchParams } from 'react-router';
 import * as Yup from 'yup';
-import toast from 'react-hot-toast';
-import { AxiosError } from 'axios';
-import RestApiClient from '../../services/api';
-import InputThemed from '../../components/inputs/InputThemed';
 import { usePublicGuard } from "../../Hooks/usePublicGuard";
-
+import InputThemed from '../../components/inputs/InputThemed';
+import ActionButton from '../../components/ActionButton';
+import useApiRequest from '../../Hooks/useApiRequest';
 
 interface FormValues {
     code: string[];
@@ -23,6 +20,7 @@ const RecoverAccount: React.FC = () => {
     const [searchParams] = useSearchParams();
     const email = searchParams.get('email');
     const navigate = useNavigate();
+    const { makeRequest, isLoading } = useApiRequest();
 
     const validationSchema = Yup.object({
         code: Yup.array()
@@ -56,20 +54,19 @@ const RecoverAccount: React.FC = () => {
                 return;
             }
 
-            try {
-                const res = await RestApiClient.post('/reset-password', {
+            await makeRequest({
+                url: '/reset-password',
+                method: 'post',
+                data: {
                     email,
                     code: values.code.join(''),
                     newPassword: values.password,
-                });
-                toast.success(res.data.message);
-                navigate('/login');
-            } catch (error) {
-                if (error instanceof AxiosError) {
-                    toast.error(error.response?.data.message);
-                }
-                console.error(error);
-            }
+                },
+                onSuccess: () => {
+                    navigate('/login');
+                },
+                successMessage: 'Contraseña cambiada exitosamente',
+            });
         },
     });
 
@@ -103,7 +100,7 @@ const RecoverAccount: React.FC = () => {
     return (
         <section className="h-screen flex items-center">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
-                <div className="w-full rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 border-border-primary">
+                <div className="w-full rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 border-border-primary animate-top-to-bottom">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-text-primary md:text-2xl">
                             Cambiar Contraseña
@@ -161,15 +158,13 @@ const RecoverAccount: React.FC = () => {
                                 <div className="text-red-500 text-sm mt-1">{formik.errors.password2}</div>
                             ) : null}
 
-                            <button
+                            <ActionButton
                                 type="submit"
-                                className={`w-full ${
-                                    formik.isSubmitting ? 'bg-main-third' : 'bg-main-primary'
-                                } text-text-secondary focus:outline-none font-bold rounded-lg text-sm px-5 py-2.5 text-center`}
-                                disabled={formik.isSubmitting}
-                            >
-                                {formik.isSubmitting ? 'Enviando...' : 'Enviar'}
-                            </button>
+                                text={isLoading ? 'Enviando...' : 'Enviar'}
+                                color="primary"
+                                disabled={isLoading}
+                                fullWidth
+                            />
                         </form>
                     </div>
                 </div>

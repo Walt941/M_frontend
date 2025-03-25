@@ -1,11 +1,10 @@
 import { useFormik } from 'formik';
 import { Link, useNavigate } from 'react-router';
 import * as Yup from 'yup';
-import toast from 'react-hot-toast';
-import { AxiosError } from 'axios';
-import RestApiClient from '../../services/api';
 import InputThemed from '../../components/inputs/InputThemed';
 import { usePublicGuard } from "../../Hooks/usePublicGuard";
+import useApiRequest from '../../Hooks/useApiRequest'; 
+import ActionButton from '../../components/ActionButton';
 
 
 interface FormValues {
@@ -16,6 +15,7 @@ interface FormValues {
 const ForgotPassword = () => {
     const navigate = useNavigate();
     usePublicGuard();
+    const { makeRequest, isLoading } = useApiRequest(); 
 
     const validationSchema = Yup.object({
         email: Yup.string()
@@ -37,23 +37,26 @@ const ForgotPassword = () => {
                 return;
             }
 
-            try {
-                const res = await RestApiClient.post('/forgot-password', { email: values.email });
-                toast.success(res.data.message);
-                navigate(`/login/recover_account?email=${values.email}`);
-            } catch (error) {
-                if (error instanceof AxiosError) {
-                    toast.error(error.response?.data.message);
-                }
-                console.error(error);
-            }
+           
+            await makeRequest({
+                url: '/forgot-password',
+                method: 'post',
+                data: { email: values.email },
+                successMessage: 'Se ha enviado un correo para recuperar tu contraseña.',
+                onSuccess: () => {
+                    navigate(`/login/recover_account?email=${values.email}`);
+                },
+                onError: (error) => {
+                    console.error('Error en la solicitud:', error);
+                },
+            });
         },
     });
 
     return (
         <section className="">
             <div className="flex flex-col items-center justify-center px-6 mx-auto py-20">
-                <div className="w-full rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 border-border-primary">
+                <div className="w-full rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 border-border-primary animate-top-to-bottom">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-text-primary md:text-2xl">
                             ¿Olvidó la contraseña?
@@ -82,15 +85,14 @@ const ForgotPassword = () => {
                                 >
                                     Atrás
                                 </Link>
-                                <button
+                                <ActionButton
                                     type="submit"
-                                    className={`w-full ${
-                                        formik.isSubmitting ? 'bg-main-third' : 'bg-main-primary'
-                                    } text-text-secondary focus:outline-none font-bold rounded-lg text-sm px-5 py-2.5 text-center`}
-                                    disabled={formik.isSubmitting}
-                                >
-                                    {formik.isSubmitting ? 'Enviando...' : 'Enviar'}
-                                </button>
+                                    text={isLoading ? 'Enviando...' : 'Enviar'}
+                                    color="primary"
+                                    disabled={isLoading}
+                                    fullWidth
+                                    className="font-bold rounded-lg text-sm px-5 py-2.5 text-center"
+                                />
                             </div>
                         </form>
                     </div>

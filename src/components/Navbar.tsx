@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { FaUserPlus, FaAlignRight, FaSignOutAlt } from "react-icons/fa";
 import { IoIosLogIn, IoMdHome } from "react-icons/io";
 import { useAuthStore } from '../stores/AuthStore';
-import { Link, useNavigate } from 'react-router';
+import { Link } from 'react-router';
 
 function Navbar() {
-    const navigate = useNavigate();
+   
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const logout = useAuthStore((state) => state.logout);
     const [showMenu, setShowMenu] = useState(false);
@@ -16,7 +16,6 @@ function Navbar() {
 
     const handleLogout = () => {
         logout(); 
-        navigate('/login'); 
         setShowMenu(false); 
     };
 

@@ -21,9 +21,9 @@ export default {
       animation: {
         'right-to-left': 'right-to-left 1.5s ease forwards', 
         'left-to-right': 'left-to-right 1.5s ease forwards', 
+        'top-to-bottom': 'top-to-bottom 1s ease forwards', // Nueva animación
       },
       keyframes: {
-       
         'right-to-left': {
           '0%': { transform: 'translateX(100px)', opacity: '0' }, 
           '100%': { transform: 'translateX(0)', opacity: '1' }, 
@@ -32,6 +32,12 @@ export default {
         'left-to-right': {
           '0%': { transform: 'translateX(-100px)', opacity: '0' }, 
           '100%': { transform: 'translateX(0)', opacity: '1' }, 
+        },
+
+        // Definir la animación de arriba hacia abajo
+        'top-to-bottom': {
+          '0%': { transform: 'translateY(-100px)', opacity: '0' }, 
+          '100%': { transform: 'translateY(0)', opacity: '1' }, 
         },
       },
     },
