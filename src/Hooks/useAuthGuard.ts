@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAuthStore } from "../stores/AuthStore";
+import { useAuthStore } from "../stores/authStore";
 import { useNavigate } from "react-router";
 
 

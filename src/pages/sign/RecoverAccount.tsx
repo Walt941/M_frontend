@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { useNavigate, useSearchParams } from 'react-router';
 import * as Yup from 'yup';
-import { usePublicGuard } from "../../Hooks/usePublicGuard";
+import { usePublicGuard } from "../../hooks/usePublicGuard";
 import InputThemed from '../../components/inputs/InputThemed';
 import ActionButton from '../../components/ActionButton';
-import useApiRequest from '../../Hooks/useApiRequest';
+import UseApiRequest from '../../hooks/useApiRequest';
 
 interface FormValues {
     code: string[];
@@ -20,7 +20,7 @@ const RecoverAccount: React.FC = () => {
     const [searchParams] = useSearchParams();
     const email = searchParams.get('email');
     const navigate = useNavigate();
-    const { makeRequest, isLoading } = useApiRequest();
+    const { makeRequest, isLoading } = UseApiRequest();
 
     const validationSchema = Yup.object({
         code: Yup.array()

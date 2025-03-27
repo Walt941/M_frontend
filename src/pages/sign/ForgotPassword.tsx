@@ -2,8 +2,8 @@ import { useFormik } from 'formik';
 import { Link, useNavigate } from 'react-router';
 import * as Yup from 'yup';
 import InputThemed from '../../components/inputs/InputThemed';
-import { usePublicGuard } from "../../Hooks/usePublicGuard";
-import useApiRequest from '../../Hooks/useApiRequest'; 
+import { usePublicGuard } from "../../hooks/usePublicGuard";
+import useApiRequest from '../../hooks/useApiRequest'; 
 import ActionButton from '../../components/ActionButton';
 
 

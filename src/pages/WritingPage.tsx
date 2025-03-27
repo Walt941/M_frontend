@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router";
 import toast from 'react-hot-toast';
-import Modal from '../components/modals/modal';
-import WordList from '../components/WritingSession/WordList';
-import WordDisplay from '../components/WritingSession/WordDisplay';
+import Modal from '../components/modals/Modal';
+import WordList from '../components/writingsession/WordList';
+import WordDisplay from '../components/writingsession/WordDisplay';
 import InputThemed from "../components/inputs/InputThemed";
-import SessionStats from '../components/WritingSession/SessionStats';
+import SessionStats from '../components/writingsession/SessionStats';
 import { TypingStats, Word, LetterData } from '../types/type';
-import useApiRequest from '../Hooks/useApiRequest';
+import useApiRequest from '../hooks/useApiRequest';
 import ActionButton from '../components/ActionButton';
+import { useAuthGuard } from "../hooks/useAuthGuard"
 
 interface SessionStatsResponse extends TypingStats {
   isCompleted: boolean;
@@ -21,7 +22,7 @@ export default function WritingPage() {
   const location = useLocation();
   const sessionId = location.state?.sessionId;
   const { makeRequest, isLoading } = useApiRequest();
-
+  useAuthGuard()
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [wordsToType, setWordsToType] = useState<Word[]>([]);
   const [userInput, setUserInput] = useState("");

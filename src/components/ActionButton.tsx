@@ -30,7 +30,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
       disabled={disabled}
       className={`
         ${colorClasses[color]}
-        text-white px-4 py-2 rounded-md transition-colors
+        text-white px-4 py-2 rounded-md transition-colors 
         ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
         ${fullWidth ? 'w-full' : ''}
        

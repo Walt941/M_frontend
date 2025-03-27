@@ -1,9 +1,9 @@
 import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
-import Router from './routes';
+import Router from './Routes';
 import { useEffect } from 'react';
-import LocalService from './services/local_service';
-import { useAuthStore } from './stores/AuthStore';
+import LocalService from './services/localService';
+import { useAuthStore } from './stores/authStore';
 import {  USER_FROM_LOCAL_STORAGE } from './constants';
 
 

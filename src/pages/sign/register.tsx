@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { Link } from 'react-router';
 import * as Yup from 'yup';
 import InputThemed from '../../components/inputs/InputThemed';
-import { usePublicGuard } from "../../Hooks/usePublicGuard";
-import useApiRequest from '../../Hooks/useApiRequest';
+import { usePublicGuard } from "../../hooks/usePublicGuard";
+import UseApiRequest from '../../hooks/useApiRequest';
 import ActionButton from '../../components/ActionButton';
 
 interface FormValues {
@@ -17,7 +17,7 @@ interface FormValues {
 const Register = () => {
     usePublicGuard();
     const [showPassword, setShowPassword] = useState(false);
-    const { makeRequest, isLoading } = useApiRequest();
+    const { makeRequest, isLoading } = UseApiRequest();
 
     const validationSchema = Yup.object({
         username: Yup.string()

@@ -22,3 +22,22 @@ export interface TypingStats {
     position: number;
     timeTaken: number;
   }
+
+  export interface SessionData {
+    fecha: string;
+    precision: number;
+    errores: number;
+    sessionId: string;
+    detalles: {
+      letrasEnSesion: number;
+      erroresEnSesion: number;
+    };
+  }
+  
+  export interface StatsData {
+    precisionPromedio: number;
+    erroresTotales: number;
+    mejorPrecision: number;
+    totalSesiones: number;
+    totalLetras: number;
+  }

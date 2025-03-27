@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
-import { useAuthStore } from "../stores/AuthStore";
+import { useAuthStore } from "../stores/authStore";
 import { FaArrowRight } from "react-icons/fa";
-import useApiRequest from '../Hooks/useApiRequest';
+import useApiRequest from '../hooks/useApiRequest';
 import ActionButton from '../components/ActionButton';
 
 export default function TypingPractice() {
@@ -54,20 +54,20 @@ export default function TypingPractice() {
                         </>
                     ) : (
                         <div className="flex flex-col md:flex-row items-center w-full">
-                            <div className="flex-1 md:mr-8 text-center md:text-left">
-                                <h1 className="text-5xl text-text-primary font-bold animate-left-to-right">Bienvenido a MecaType</h1>
-                                <p className="mt-6 mb-8 text-gray-600 animate-left-to-right">
+                            <div className="flex-1 md:mr-8 text-center md:text-left animate-left-to-right">
+                                <h1 className="text-5xl text-text-primary font-bold ">Bienvenido a MecaType</h1>
+                                <p className="mt-6 mb-8 text-gray-600 ">
                                     ¡Bienvenido! Antes de comenzar, por favor inicie sesión.
                                 </p>
                                 <ActionButton
                                     onClick={() => navigate('/login')}
                                     text={
-                                        <span className="flex items-center justify-center gap-2">
+                                        <span className="flex items-center justify-center gap-2 ">
                                             Ir a Login <FaArrowRight className="text-text-secondary" />
                                         </span>
                                     }
                                     color="primary"
-                                    className="animate-left-to-right mx-auto md:mx-0"
+                                    className=" mx-auto md:mx-0"
                                 />
                             </div>
 

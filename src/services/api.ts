@@ -1,7 +1,7 @@
 import axios, { InternalAxiosRequestConfig } from "axios";
-import LocalService from "./local_service";
-import { getEnv } from "./env_service";
-import { useAuthStore } from "../stores/AuthStore";
+import LocalService from "./localService";
+import { getEnv } from "./envService";
+import { useAuthStore } from "../stores/authStore";
 
 const localServices = new LocalService();
 const apiUrl = getEnv().publicApiUrl + "/api";

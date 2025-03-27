@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { FaUserPlus, FaAlignRight, FaSignOutAlt } from "react-icons/fa";
 import { IoIosLogIn, IoMdHome } from "react-icons/io";
-import { useAuthStore } from '../stores/AuthStore';
-import { Link } from 'react-router';
+import { FcStatistics } from "react-icons/fc";
+import { Link } from 'react-router'; // Corregí la importación de Link
+import { useAuthStore } from '../stores/authStore';
 
 function Navbar() {
-   
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const logout = useAuthStore((state) => state.logout);
     const [showMenu, setShowMenu] = useState(false);
@@ -46,8 +46,18 @@ function Navbar() {
                             aria-orientation="vertical"
                             aria-labelledby="options-menu"
                         >
+                            <Link
+                                to="/home"
+                                className={`flex items-center space-x-2 py-2 text-gray-700 hover:text-gray-900 px-1`}
+                                onClick={() => setShowMenu(false)}
+                            >
+                                <IoMdHome size={24} color="currentColor" />
+                                <span>Home</span>
+                            </Link>
+
                             {!isAuthenticated ? (
                                 <>
+                                
                                     <Link
                                         to="/register"
                                         className={`flex items-center space-x-2 py-2 text-gray-700 hover:text-gray-900 px-1`}
@@ -64,23 +74,25 @@ function Navbar() {
                                         <IoIosLogIn size={24} color="currentColor" />
                                         <span>Login</span>
                                     </Link>
+                                </>
+                            ) : (
+                                <>
                                     <Link
-                                        to="/home"
+                                        to="/progress"
                                         className={`flex items-center space-x-2 py-2 text-gray-700 hover:text-gray-900 px-1`}
                                         onClick={() => setShowMenu(false)}
                                     >
-                                         <IoMdHome size={24} color="currentColor" />
-                                        <span>Home</span>
+                                        <FcStatistics size={24} color="currentColor" />
+                                        <span>Progreso</span>
                                     </Link>
+                                    <button
+                                        onClick={handleLogout}
+                                        className={`flex items-center space-x-2 py-2 text-gray-700 hover:text-gray-900 px-1 w-full`}
+                                    >
+                                        <FaSignOutAlt size={24} color="currentColor" />
+                                        <span>Cerrar Sesión</span>
+                                    </button>
                                 </>
-                            ) : (
-                                <button
-                                    onClick={handleLogout}
-                                    className={`flex items-center space-x-2 py-2 text-gray-700 hover:text-gray-900 px-1 w-full`}
-                                >
-                                    <FaSignOutAlt size={24} color="currentColor" />
-                                    <span>Cerrar Sesión</span>
-                                </button>
                             )}
                         </div>
                     )}

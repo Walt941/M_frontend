@@ -1,11 +1,12 @@
 import { Outlet, Route, Routes } from 'react-router';
-import Login from './pages/sign/login';
-import Register from './pages/sign/register';
+import Login from './pages/sign/Login';
+import Register from './pages/sign/Register';
 import Home from './pages/Home';
-import NotFound from './pages/not_found';
-import ForgotPassword from './pages/sign/forgot_password';
-import RecoverAccount from './pages/sign/recover_account';
+import NotFound from './pages/NotFound';
+import ForgotPassword from './pages/sign/ForgotPassword';
+import RecoverAccount from './pages/sign/RecoverAccount';
 import WritingPage from './pages/WritingPage';
+import Progress from './pages/Progress'
 
 function Router() {
     return (
@@ -20,7 +21,7 @@ function Router() {
             <Route path="/register" element={<Register />} />
             <Route path="/home" element={<Home />} />
             <Route path="/writing" element={<WritingPage />} />
-
+            <Route path="/progress" element={<Progress />} />
             <Route path='*' element={<NotFound />} />
         </Routes >
     )
